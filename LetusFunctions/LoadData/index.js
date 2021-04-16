@@ -35,11 +35,20 @@ MERGE (paul)-[:friended]->(peter)
 MERGE (paul)-[:friended]->(mary)`;
 
 module.exports = async function (context, req) {
-  context.log('Azure trigger - Loading initial data.');
+  context.log(
+    'Azure trigger - Loading initial data.',
+    process.env.REDIS_GRAPH,
+    process.env.REDIS_HOST,
+    process.env.REDIS_PORT,
+    process.env.REDIS_PASS
+  );
 
   const result = await client.query(query);
+  const body = {
+    stastics: result.getStatistics(),
+  };
   client.close();
   context.res = {
-    body: result[0][1],
+    body,
   };
 };
