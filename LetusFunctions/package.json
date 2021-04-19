@@ -7,6 +7,9 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
+    "@azure/ai-text-analytics": "^5.0.1",
+    "@google-cloud/language": "^4.2.2",
+    "google-gax": "^2.11.2",
     "redisgraph.js": "^2.3.0"
   },
   "devDependencies": {}
