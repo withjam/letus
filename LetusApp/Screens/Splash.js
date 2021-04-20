@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
-import { styles } from './Styles';
+import { styles } from '../Styles';
 
 export const Splash = () => {
   return (

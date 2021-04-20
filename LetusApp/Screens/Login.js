@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Pressable, SafeAreaView, Text, View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
-import { AppContext } from './AppContext';
-import { styles, pickerSelectStyles } from './Styles';
+import { AppContext } from '../AppContext';
+import { styles, pickerSelectStyles, SIZES, GUTTER } from '../Styles';
 
 export const Login = () => {
   const context = useContext(AppContext);
@@ -10,7 +10,7 @@ export const Login = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.h2}>Please Sign In</Text>
-      <View style={{ marginVertical: 40, width: '65%' }}>
+      <View style={{ marginVertical: SIZES.xl, width: '70%' }}>
         <RNPickerSelect
           placeholder={{}}
           style={pickerSelectStyles}

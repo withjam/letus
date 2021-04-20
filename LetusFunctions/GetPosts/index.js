@@ -11,9 +11,10 @@ module.exports = async function (context, req) {
 
   const name = req.query.as || 'Paul';
   const query = `MATCH (me:Person {name: $name})-[:friended]->()-[:posted]->(post:Post) 
-  WITH me, post 
+  WITH me, post
+  MATCH (poster:Person)-[:posted]->(post)
   OPTIONAL MATCH (post)-[:hasComment]->(comment:Comment)<-[:commented]-(commenter:Person)<-[:friended]-(me) 
-  RETURN post, collect(comment) as comments, collect(commenter) as commenters`;
+  RETURN post, poster, collect(comment) as comments, collect(commenter) as commenters`;
   const result = await client.query(query, { name });
   const body = {
     records: [],

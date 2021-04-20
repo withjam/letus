@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { AppContext } from './AppContext';
 
-import { Splash } from './Splash';
-import { Login } from './Login';
-import { Home } from './Home';
+import { Splash } from './Screens/Splash';
+import { Login } from './Screens/Login';
+import { Posts } from './Screens/Posts';
 
 export const ScreenController = () => {
   const { user, loaded, posts } = useContext(AppContext);
@@ -13,5 +13,5 @@ export const ScreenController = () => {
   if (!user) {
     return <Login />;
   }
-  return <Home />;
+  return <Posts />;
 };
