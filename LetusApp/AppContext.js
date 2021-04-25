@@ -21,7 +21,6 @@ export const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [loaded, setLoaded] = useState(true);
   const [posts, setPosts] = useState([]);
-  const [poller, setPoller] = useState();
 
   useEffect(() => {
     if (user) {

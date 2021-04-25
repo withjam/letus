@@ -128,6 +128,12 @@ styleDef.buttonAltText = {
   color: COLORS.secondary,
 };
 
+styleDef.cancelText = {
+  ...styleDef.strong,
+  color: COLORS.black,
+  fontSize: SIZES.sm,
+};
+
 styleDef.postContainer = {};
 
 styleDef.postHeader = {
@@ -176,6 +182,34 @@ styleDef.postFooterText = {
   ...styleDef.text,
   fontSize: SIZES.sub,
   color: COLORS.muted,
+};
+
+styleDef.modal = {
+  flex: 1,
+  height: SIZES.xl,
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+};
+
+styleDef.modalHeader = {
+  flex: 0,
+  width: '100%',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  padding: 10,
+  borderBottomColor: COLORS.primary,
+  borderBottomWidth: 1,
+};
+
+styleDef.modalHeaderText = {
+  ...styleDef.strong,
+  fontSize: SIZES.md,
+};
+
+styleDef.modalBody = {
+  flex: 1,
+  backgroundColor: '#fff',
+  width: '100%',
 };
 
 export const styles = StyleSheet.create(styleDef);
