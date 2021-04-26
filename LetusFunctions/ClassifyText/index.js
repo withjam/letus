@@ -17,12 +17,14 @@ module.exports = async function (context, req) {
   context.log('ClassifyText function processed a request.');
   let categories = [];
 
-  if (req.body && req.body.split(' ').length > 20) {
+  const { text } = req.body;
+
+  if (text && text.split(' ').length > 20) {
     const sslCreds = getApiKeyCredentials();
     const client = new language.LanguageServiceClient({ sslCreds });
 
     const document = {
-      content: req.body,
+      content: text,
       type: 'PLAIN_TEXT',
     };
 

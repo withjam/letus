@@ -212,6 +212,11 @@ styleDef.modalBody = {
   width: '100%',
 };
 
+styleDef.modalForm = {
+  flex: 1,
+  padding: SIZES.md,
+};
+
 export const styles = StyleSheet.create(styleDef);
 
 export const pickerSelectStyles = StyleSheet.create({
