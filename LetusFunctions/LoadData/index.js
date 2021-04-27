@@ -8,7 +8,7 @@ const client = new RedisGraph(
   { password: process.env.REDIS_PASS }
 );
 
-const now = new Date().toISOString();
+const now = new Date().getTime();
 const query = `MERGE (paul:Person {id: 1, name:"Paul"})-[:posted]->(post:Post {text:"This is Paul", created: $now})
 MERGE (ringo:Person {name:"Ringo"})-[:friended]->(paul)
 MERGE (john:Person {name:"John"})-[:friended]->(paul)

@@ -13,9 +13,9 @@ export const Posts = () => {
       <Header />
       <View style={styles.main}>
         <FlatList
-          keyExtractor={({ index, item }) =>
-            item && item.post ? item.post.id : index + ''
-          }
+          keyExtractor={(item, index) => {
+            return '' + (item && item.post ? item.post.id : index);
+          }}
           data={context.posts}
           renderItem={({ item }) => <PostView data={item} />}
         />

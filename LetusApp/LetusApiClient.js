@@ -1,7 +1,7 @@
 import { LETUS_API_URL } from '@env';
 
 function postData(url, data) {
-  return fetch(url, {
+  return fetch(LETUS_API_URL + url, {
     method: 'POST',
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'same-origin', // include, *same-origin, omit
@@ -29,19 +29,38 @@ export function mapRecords(jsonData) {
 
 export const LetusApiClient = {
   getPosts: async (asUser) => {
+    console.log('get posts');
     const res = await fetch(LETUS_API_URL + '/GetPosts?as=' + asUser);
     const json = await res.json();
     return mapRecords(json);
   },
-  createPost: async (text) => {
-    const jsonData = { text };
-    const [classificationResponse, analyzeResponse] = await Promise.all([
-      postData(LETUS_API_URL + '/ClassifyText', jsonData),
-      postData(LETUS_API_URL + '/AnalyzeSentiment', jsonData),
-    ]);
-    const { categories } = await classificationResponse.json();
-    const { sentiment } = await analyzeResponse.json();
-    console.log(categories, sentiment);
-    const res = await postData('/CreatePost', { text, categories, sentiment });
+  createPost: async (text, asUser) => {
+    let results = [];
+    try {
+      const jsonData = { text };
+      const [classificationResponse, analyzeResponse] = await Promise.all([
+        postData('/ClassifyText', jsonData),
+        postData('/AnalyzeSentiment', jsonData),
+      ]);
+      const { categories } = await classificationResponse.json();
+      const { sentiment } = await analyzeResponse.json();
+      console.log({
+        text,
+        name: asUser,
+        categories,
+        sentiment,
+      });
+      const res = await postData('/CreatePost', {
+        text,
+        name: asUser,
+        categories,
+        sentiment,
+      });
+      results = await res.json();
+      console.log('createPost', results);
+    } catch (ex) {
+      console.log('error', ex);
+    }
+    return results;
   },
 };

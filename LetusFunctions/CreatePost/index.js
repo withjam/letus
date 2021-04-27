@@ -18,11 +18,26 @@ module.exports = async function (context, req) {
       { password: process.env.REDIS_PASS }
     );
     const { name, text } = req.body;
-    const now = new Date().toISOString();
-    const result = await client.query(
-      'MATCH (me:Person {name:$name}) CREATE (me)-[:posted]->(post:Post {text:$text,created:$now}) RETURN post',
-      { name, text, now }
-    );
+    const sentiment = req.body.sentiment || 'neutral';
+    const categories = req.body.categories || [];
+    const now = new Date().getTime();
+    const query = `MATCH (me:Person {name:$name}) CREATE (me)-[:posted]->(post:Post {text:$text,created:$now}) MERGE (post)-[:hasSentiment]-(:Sentiment {name: $sentiment}) ${categories
+      .map(
+        (cat, index) =>
+          'MERGE (post)-[:inCategory]->(:Category {name: $cat' + index + '})'
+      )
+      .join(' ')} RETURN post`;
+    const params = {
+      name,
+      text,
+      now,
+      sentiment,
+      ...categories.reduce((acc, val, index) => {
+        acc['cat' + index] = val.name;
+        return acc;
+      }, {}),
+    };
+    const result = await client.query(query, params);
     const body = {};
     body.stats = result.getStatistics();
     while (result.hasNext()) {

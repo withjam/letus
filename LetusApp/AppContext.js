@@ -10,7 +10,9 @@ export const AppContextProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      setPosts(LetusApiClient.getPosts(user));
+      LetusApiClient.getPosts(user).then((records) => {
+        setPosts(records);
+      });
     }
   }, [user]);
   return (
