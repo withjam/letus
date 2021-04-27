@@ -21,11 +21,16 @@ module.exports = async function (context, req) {
     const sentiment = req.body.sentiment || 'neutral';
     const categories = req.body.categories || [];
     const now = new Date().getTime();
-    const query = `MATCH (me:Person {name:$name}) CREATE (me)-[:posted]->(post:Post {text:$text,created:$now}) MERGE (post)-[:hasSentiment]-(:Sentiment {name: $sentiment}) ${categories
+
+    const query = `MATCH (me:Person {name:$name}) ${categories
       .map(
         (cat, index) =>
-          'MERGE (post)-[:inCategory]->(:Category {name: $cat' + index + '})'
+          'MERGE (cat' + index + ':Category {name: $cat' + index + '})'
       )
+      .join(
+        ' '
+      )}  MERGE (sentiment:Sentiment {name: $sentiment}) CREATE (me)-[:posted]->(post:Post {text:$text,created:$now}) MERGE (post)-[:hasSentiment]->(sentiment) ${categories
+      .map((cat, index) => 'MERGE (post)-[:inCategory]->(cat' + index + ')')
       .join(' ')} RETURN post`;
     const params = {
       name,
@@ -37,6 +42,7 @@ module.exports = async function (context, req) {
         return acc;
       }, {}),
     };
+    context.log(query, params);
     const result = await client.query(query, params);
     const body = {};
     body.stats = result.getStatistics();
