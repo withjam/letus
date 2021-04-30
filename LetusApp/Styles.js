@@ -204,13 +204,13 @@ styleDef.modalHeader = {
   width: '100%',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  padding: 10,
+  padding: SIZES.sm,
   borderBottomColor: COLORS.primary,
   borderBottomWidth: 1,
 };
 
 styleDef.modalHeaderText = {
-  ...styleDef.strong,
+  ...styleDef.text,
   fontSize: SIZES.md,
 };
 
@@ -218,11 +218,24 @@ styleDef.modalBody = {
   flex: 1,
   backgroundColor: '#fff',
   width: '100%',
+  padding: SIZES.md,
 };
 
 styleDef.modalForm = {
   flex: 1,
-  padding: SIZES.md,
+};
+
+styleDef.modalRow = {
+  flex: 0,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  paddingVertical: SIZES.xs,
+};
+
+styleDef.modalRowDisabled = {
+  ...styleDef.modalRow,
+  opacity: 0.33,
 };
 
 styleDef.menu = {

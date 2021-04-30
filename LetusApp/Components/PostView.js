@@ -11,7 +11,6 @@ export const PostView = ({ data }) => {
   const [showIgnoreSettings, setShowIgnoreSettings] = useState(false);
 
   function hideIgnore() {
-    meatballRef.current.close();
     setShowIgnoreSettings(false);
   }
 

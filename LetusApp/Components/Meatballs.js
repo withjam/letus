@@ -21,6 +21,7 @@ export const Meatballs = ({ withRef, children }) => {
         }}
         height={350}
         openDuration={250}
+        closeDuration={125}
         onOpen={withRef ? () => withRef(drawer.current) : () => null}
         closeOnDragDown={true}
         dragFromTopOnly={true}
