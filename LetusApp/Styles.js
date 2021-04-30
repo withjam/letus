@@ -25,6 +25,11 @@ export const COLORS = {
   white: '#fff',
   black: '#000',
   muted: '#393939',
+  shadow: '#e9e9e9',
+  danger: '#DD1C1A',
+  warning: '#f0c808',
+  ok: '#43aa8b',
+  link: '#086788',
 };
 
 export const WEIGHTS = {
@@ -45,7 +50,7 @@ const styleDef = {
 styleDef.main = {
   ...styleDef.container,
   alignSelf: 'stretch',
-  backgroundColor: COLORS.white,
+  backgroundColor: COLORS.shadow,
   alignItems: 'stretch',
   justifyContent: 'space-between',
 };
@@ -134,7 +139,10 @@ styleDef.cancelText = {
   fontSize: SIZES.sm,
 };
 
-styleDef.postContainer = {};
+styleDef.postContainer = {
+  backgroundColor: COLORS.white,
+  marginBottom: 1,
+};
 
 styleDef.postHeader = {
   paddingHorizontal: GUTTER,
@@ -215,6 +223,26 @@ styleDef.modalBody = {
 styleDef.modalForm = {
   flex: 1,
   padding: SIZES.md,
+};
+
+styleDef.menu = {
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+};
+
+styleDef.menuItem = {
+  flex: 0,
+  width: '100%',
+  padding: SIZES.sm,
+};
+
+styleDef.menuItemText = {
+  ...styleDef.strong,
+  fontSize: SIZES.md,
+};
+
+styleDef.menuItemSubText = {
+  ...styleDef.textMuted,
 };
 
 export const styles = StyleSheet.create(styleDef);

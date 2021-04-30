@@ -7,6 +7,7 @@ export const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [loaded, setLoaded] = useState(true);
   const [posts, setPosts] = useState([]);
+  const [ignorePost, setIgnorePost] = useState({ poster: { properties: {} } });
 
   useEffect(() => {
     if (user) {
@@ -16,7 +17,17 @@ export const AppContextProvider = ({ children }) => {
     }
   }, [user]);
   return (
-    <AppContext.Provider value={{ loaded, setLoaded, user, setUser, posts }}>
+    <AppContext.Provider
+      value={{
+        loaded,
+        setLoaded,
+        user,
+        setUser,
+        posts,
+        ignorePost,
+        setIgnorePost,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
