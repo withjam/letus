@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { cloneElement, useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import Menu, { MenuItem } from 'react-native-material-menu';
 import { COLORS, SIZES, styles } from '../Styles';
@@ -35,17 +35,24 @@ export const Pillbox = ({ value, values, onChange, disabled }) => {
           </Pressable>
         }
       >
-        {values.map((opt, index) => (
-          <MenuItem
-            key={index}
-            onPress={() => {
-              onChange(opt);
-              hideMenu();
-            }}
-          >
-            {opt}
-          </MenuItem>
-        ))}
+        {Array.isArray(values)
+          ? values.map((opt, index) => (
+              <MenuItem
+                key={index}
+                onPress={() => {
+                  onChange(opt);
+                  hideMenu();
+                }}
+              >
+                {opt}
+              </MenuItem>
+            ))
+          : cloneElement(values, {
+              onSelection: (item) => {
+                onChange(item.key);
+                hideMenu();
+              },
+            })}
       </Menu>
     </View>
   );

@@ -8,15 +8,15 @@ import {
   StyleSheet,
 } from 'react-native';
 import { styles, SIZES } from '../Styles';
+import {
+  CategoryNameList,
+  getCategoryFromKey,
+  getCategoryName,
+} from './CategoryNameList';
 import { Pillbox } from './Pillbox';
 
 const sentiments = require('../Sentiments.json');
-const categories = require('../ContentCategories.json');
 const ignoreTypes = ['this post', 'any post'];
-
-const categoryNames = categories.map((cat) =>
-  cat.substring(cat.lastIndexOf('/') + 1)
-);
 
 export const IgnorePostSettings = ({ data, shown, onCancel, onSave }) => {
   if (!data) return null;
@@ -25,7 +25,7 @@ export const IgnorePostSettings = ({ data, shown, onCancel, onSave }) => {
   const [ignoreType, setIgnoreType] = useState(ignoreTypes[0]);
   const [ignoreTarget, setIgnoreTarget] = useState(posterName);
   const [ignoreSentiment, setIgnoreSentiment] = useState('any');
-  const [ignoreCategories, setIgnoreCategories] = useState(-1);
+  const [ignoreCategories, setIgnoreCategories] = useState();
 
   return (
     <Modal presentationStyle='fullScreen' visible={shown} animationType='slide'>
@@ -96,14 +96,10 @@ export const IgnorePostSettings = ({ data, shown, onCancel, onSave }) => {
             </Text>
             <Pillbox
               disabled={ignoreType === 'this post'}
-              value={
-                ignoreCategories === -1
-                  ? '*anything*'
-                  : categoryNames[ignoreCategories]
-              }
-              values={['*anything*', ...categoryNames]}
-              onChange={(v) => {
-                setIgnoreCategories(categories.findIndex((c) => c.endsWith(v)));
+              value={getCategoryName(ignoreCategories)}
+              values={<CategoryNameList />}
+              onChange={(index) => {
+                setIgnoreCategories(getCategoryFromKey(index));
               }}
             />
           </View>
