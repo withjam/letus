@@ -30,9 +30,15 @@ export function mapRecords(jsonData) {
 export const LetusApiClient = {
   getPosts: async (asUser) => {
     console.log('get posts');
-    const res = await fetch(LETUS_API_URL + '/GetPosts?as=' + asUser);
-    const json = await res.json();
-    return mapRecords(json);
+    let result = [];
+    try {
+      const res = await fetch(LETUS_API_URL + '/GetPosts?as=' + asUser);
+      const json = await res.json();
+      result = mapRecords(json);
+    } catch (ex) {
+      console.log(ex);
+    }
+    return result;
   },
   createPost: async (text, asUser) => {
     let results = [];

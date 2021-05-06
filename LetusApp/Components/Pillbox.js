@@ -48,6 +48,7 @@ export const Pillbox = ({ value, values, onChange, disabled }) => {
               </MenuItem>
             ))
           : cloneElement(values, {
+              // if it's not an array of values to display, we assume it's the category name list component for now
               onSelection: (item) => {
                 onChange(item.key);
                 hideMenu();

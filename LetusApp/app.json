@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "letus.app",
     "name": "LetusApp",
     "slug": "LetusApp",
     "version": "1.0.0",
@@ -13,13 +14,18 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "app.letus.social",
+      "supportsTablet": true,
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "401292332695-jbt96plbc6g9h167jg3qu7875g8qdb8t.apps.googleusercontent.com"
+        }
+      }
     },
     "android": {
+      "package": "app.letus.social",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
