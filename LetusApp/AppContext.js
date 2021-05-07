@@ -8,10 +8,17 @@ export const AppContextProvider = ({ children }) => {
   const [loaded, setLoaded] = useState(true);
   const [posts, setPosts] = useState([]);
   const [ignorePost, setIgnorePost] = useState({ poster: { properties: {} } });
+  const [client, setClient] = useState();
 
   useEffect(() => {
     if (user) {
-      LetusApiClient.getPosts(user).then((records) => {
+      // create instance of client bound to this user
+      const apiClient = new LetusApiClient(user);
+      setClient(apiClient);
+      apiClient.editUser(user).then((res) => {
+        console.log('editUser res', res);
+      });
+      apiClient.getPosts(user).then((records) => {
         setPosts(records);
       });
     }
@@ -26,6 +33,7 @@ export const AppContextProvider = ({ children }) => {
         posts,
         ignorePost,
         setIgnorePost,
+        client,
       }}
     >
       {children}

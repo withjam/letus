@@ -10,7 +10,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export const Login = () => {
   const context = useContext(AppContext);
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
     expoClientId: GOOGLE_WEB_CLIENT_ID,
     iosClientId: GOOGLE_WEB_CLIENT_ID,
     androidClientId: GOOGLE_WEB_CLIENT_ID,
@@ -20,16 +20,16 @@ export const Login = () => {
   React.useEffect(() => {
     if (response?.type === 'success') {
       (async () => {
-        const { authentication } = response;
-        console.log('auth', authentication.accessToken);
-        const token = authentication.accessToken;
+        const {
+          params: { id_token: idToken },
+        } = response;
+        console.log('auth', idToken);
         const info = await fetch(
-          'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' +
-            authentication.accessToken
+          'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken
         );
         const jsonInfo = await info.json();
         console.log('user', jsonInfo);
-        context.setUser(jsonInfo);
+        context.setUser({ ...jsonInfo, token: idToken });
       })();
     }
   }, [response]);
