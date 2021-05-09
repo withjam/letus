@@ -1,5 +1,19 @@
 import { LETUS_API_URL } from '@env';
 
+export async function fetchGoogleUserInfo(idToken) {
+  try {
+    console.log('auth', idToken);
+    const info = await fetch(
+      'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken
+    );
+    const jsonInfo = await info.json();
+    return jsonInfo;
+  } catch (ex) {
+    console.log('Error fetching user info', ex);
+    return null;
+  }
+}
+
 export function mapRecords(jsonData) {
   const records = jsonData.records
     ? jsonData.records.map((record) => {
@@ -14,17 +28,20 @@ export function mapRecords(jsonData) {
   return records;
 }
 
-export function LetusApiClient(user) {
-  this.user = user;
+export function LetusApiClient(userKey) {
+  this.userKey = userKey;
 }
 LetusApiClient.prototype.authHeader = function () {
-  return { 'x-letus-app': this.user.token };
+  return { 'x-letus-app': this.userKey };
 };
-LetusApiClient.prototype.getPosts = async function (asUser) {
-  console.log('get posts', this.authHeader());
+LetusApiClient.prototype.getPosts = async function () {
   let result = [];
   try {
-    const res = await fetch(LETUS_API_URL + '/GetPosts?as=' + asUser);
+    const res = await fetch(LETUS_API_URL + '/GetPosts', {
+      headers: {
+        ...this.authHeader(),
+      },
+    });
     const json = await res.json();
     result = mapRecords(json);
   } catch (ex) {
@@ -60,6 +77,24 @@ LetusApiClient.prototype.createPost = async function (text, asUser) {
     console.log('error', ex);
   }
   return results;
+};
+LetusApiClient.prototype.getUserInfo = async function () {
+  let result = [];
+  console.log('getuserInf', this.authHeader());
+  try {
+    const res = await fetch(LETUS_API_URL + '/GetUser', {
+      headers: {
+        ...this.authHeader(),
+      },
+    });
+    if (!res.ok) throw new Error(res.status);
+    const json = await res.json();
+    result = mapRecords(json);
+  } catch (ex) {
+    console.log('error in getuserInfo', ex);
+    return Promise.reject(ex);
+  }
+  return result;
 };
 LetusApiClient.prototype.editUser = async function (info) {
   let results = {};

@@ -19,18 +19,11 @@ export const Login = () => {
 
   React.useEffect(() => {
     if (response?.type === 'success') {
-      (async () => {
-        const {
-          params: { id_token: idToken },
-        } = response;
-        console.log('auth', idToken);
-        const info = await fetch(
-          'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken
-        );
-        const jsonInfo = await info.json();
-        console.log('user', jsonInfo);
-        context.setUser({ ...jsonInfo, token: idToken });
-      })();
+      console.log('new login', response);
+      const {
+        params: { id_token: idToken },
+      } = response;
+      context.setUserKey(idToken);
     }
   }, [response]);
 

@@ -74,6 +74,7 @@ styleDef.text = {
 
 styleDef.textLight = {
   fontFamily: 'NotoSansJP_100Thin',
+  fontSize: SIZES.sm,
 };
 
 styleDef.textMuted = {
@@ -82,6 +83,7 @@ styleDef.textMuted = {
 };
 
 styleDef.strong = {
+  ...styleDef.text,
   fontFamily: 'NotoSansJP_500Medium',
 };
 
@@ -267,7 +269,8 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingVertical: SIZES.xs,
     paddingHorizontal: GUTTER,
     borderWidth: 1,
-    borderColor: COLORS.light,
+    borderColor: COLORS.dark,
+    backgroundColor: COLORS.light,
     borderRadius: 8,
     paddingRight: 30, // to ensure the text is never behind the icon
   },
