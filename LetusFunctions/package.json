@@ -9,6 +9,7 @@
   "dependencies": {
     "@azure/ai-text-analytics": "^5.0.1",
     "@google-cloud/language": "^4.2.2",
+    "firebase-admin": "^9.7.0",
     "google-auth-library": "^7.0.4",
     "google-gax": "^2.11.2",
     "redisgraph.js": "^2.3.0"

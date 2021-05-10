@@ -94,18 +94,18 @@ LetusApiClient.prototype.getUserInfo = async function () {
     console.log('error in getuserInfo', ex);
     return Promise.reject(ex);
   }
-  return result;
+  return result.length ? result[0] : null;
 };
 LetusApiClient.prototype.editUser = async function (info) {
-  let results = {};
+  let result = {};
   try {
-    const res = await this.postData('/EditUser', { info });
+    const res = await this.postData('/EditUser', info);
     const json = await res.json();
-    results = json;
+    result = mapRecords(json);
   } catch (ex) {
     console.log(ex);
   }
-  return results;
+  return result.length ? result[0] : null;
 };
 LetusApiClient.prototype.postData = function (url, data) {
   return fetch(LETUS_API_URL + url, {

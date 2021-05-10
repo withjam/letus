@@ -1,5 +1,7 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
+const windowWidth = Dimensions.get('window').width;
+export const sidebarWidth = windowWidth * 0.65;
 
 export const GUTTER = 12;
 
@@ -88,6 +90,7 @@ styleDef.strong = {
 };
 
 styleDef.bold = {
+  ...styleDef.text,
   fontFamily: 'NotoSansJP_700Bold',
 };
 
@@ -194,6 +197,20 @@ styleDef.postFooterText = {
   color: COLORS.muted,
 };
 
+styleDef.containerForm = {
+  paddingVertical: SIZES.md,
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'stretch',
+};
+
+styleDef.formInput = {
+  padding: SIZES.md,
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+};
+
 styleDef.modal = {
   flex: 1,
   height: SIZES.xl,
@@ -258,6 +275,49 @@ styleDef.menuItemText = {
 
 styleDef.menuItemSubText = {
   ...styleDef.textMuted,
+};
+
+styleDef.textInput = {
+  ...styleDef.text,
+  width: '80%',
+  fontSize: SIZES.md,
+  paddingVertical: SIZES.xs,
+  paddingHorizontal: GUTTER,
+  borderWidth: 1,
+  borderColor: COLORS.dark,
+  backgroundColor: COLORS.light,
+  borderRadius: 8,
+  paddingRight: 30, // to ensure the text is never behind the icon
+};
+
+styleDef.sidebar = {
+  width: sidebarWidth,
+  flex: 1,
+  backgroundColor: COLORS.shadow,
+};
+
+styleDef.sidebarTop = {
+  paddingHorizontal: SIZES.md,
+  paddingTop: Constants.statusBarHeight + 9,
+  paddingBottom: 10,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  backgroundColor: COLORS.shadow,
+  borderBottomColor: COLORS.shadow,
+  borderBottomWidth: 1,
+};
+
+styleDef.sidebarItem = {
+  paddingHorizontal: SIZES.md,
+  paddingVertical: SIZES.sm,
+  backgroundColor: COLORS.white,
+  borderBottomColor: COLORS.shadow,
+  borderBottomWidth: 1,
+};
+
+styleDef.sidebarText = {
+  ...styleDef.text,
 };
 
 export const styles = StyleSheet.create(styleDef);

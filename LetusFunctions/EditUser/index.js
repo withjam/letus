@@ -8,7 +8,6 @@ const {
 
 module.exports = async function (context, req) {
   context.log('Edit User HTTP trigger function processed a request.');
-  const res = {};
   const { body } = req;
 
   if (!body) {
@@ -33,17 +32,19 @@ module.exports = async function (context, req) {
         context.log(query);
         const params = { name, pic, userid };
         const result = await client.query(query, params);
-        const body = {};
+        const body = {
+          records: [],
+        };
         body.stats = result.getStatistics();
         while (result.hasNext()) {
-          body.record = result.next();
+          body.records.push(result.next());
         }
         client.close();
-        res.body = {
+        console.log('got results', body);
+        context.res = {
           body,
         };
       }
-      context.res = res;
     } catch (ex) {
       context.log(ex);
       contextUnauthorized(context);

@@ -1,15 +1,16 @@
 const RedisGraph = require('redisgraph.js').Graph;
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT);
+const firebaseAdmin = require('firebase-admin');
+
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.applicationDefault(),
+});
 
 module.exports = {
   verify: async function verify(idToken) {
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_OAUTH_CLIENT,
-    });
-    const payload = ticket.getPayload();
-    const userid = payload['sub'];
+    const decoded = await firebaseAdmin.auth().verifyIdToken(idToken);
+    const userid = decoded.uid;
     return userid;
   },
   useRedisClient: function useRedisClient() {

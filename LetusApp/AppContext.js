@@ -1,9 +1,8 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { LetusApiClient } from './LetusApiClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as firebase from 'firebase';
 
 export const AppContext = createContext({});
-const USER_ID_KEY_STORAGE = 'letus.app.user.token';
 export const USER_ID_KEY = 'idToken';
 
 // context.setUser({ ...jsonInfo, token: idToken });
@@ -17,22 +16,23 @@ export const AppContextProvider = ({ children }) => {
   const [userKey, setUserKey] = useState();
   const [bigError, setBigError] = useState(false);
 
-  // When the app is first loaded...
+  // when first initialized
   useEffect(() => {
-    // attempt to fetch the cached user token if they were previously signed in
-    (async () => {
-      try {
-        const key = await AsyncStorage.getItem(USER_ID_KEY_STORAGE);
-        if (key !== null) {
-          setUserKey(key);
-        }
-        setLoaded(true);
-      } catch (e) {
-        console.log('error initializing from storage', e);
-        // error reading value
-        setBigError(e);
+    firebase.auth().onAuthStateChanged((user) => {
+      setLoaded(true);
+      if (user) {
+        console.log('auth user change', user);
+        const uid = user.uid;
+        user.getIdToken(true).then((idToken) => {
+          console.log(uid, idToken);
+          setUserKey(idToken);
+        });
+      } else {
+        console.log('user is null');
+        setUserInfo(null);
+        setUserKey(null);
       }
-    })();
+    });
   }, []);
 
   // Whenever the user key changes...
@@ -42,39 +42,28 @@ export const AppContextProvider = ({ children }) => {
       // create instance of client bound to this user
       const apiClient = new LetusApiClient(userKey);
       setClient(apiClient);
-      // load their posts
-      apiClient.getPosts(userKey).then((records) => {
-        setPosts(records);
-      });
-      // update local storage
-      AsyncStorage.setItem(USER_ID_KEY_STORAGE, userKey);
+      (async () => {
+        let deets = await apiClient.getUserInfo();
+        console.log('got deets from apiClient ', deets, userInfo);
+        // if no userInfo, create new user
+        if (!deets && userInfo && userInfo.nickname) {
+          deets = await apiClient.editUser({ name: userInfo.nickname });
+          console.log('got new deets', deets);
+          setUserInfo(deets);
+        } else {
+          setUserInfo(deets);
+        }
+        // load their posts
+        // apiClient.getPosts(userKey).then((records) => {
+        //   setPosts(records);
+        // });
+      })();
     }
   }, [userKey]);
-
-  // whenever the client or info changes...
-  useEffect(() => {
-    // fetch user info if not present
-    if (client && !userInfo) {
-      client
-        .getUserInfo()
-        .then((info) => {
-          console.log('gotUserInfo', info);
-          setUserInfo({ __new: true });
-        })
-        .catch((ex) => {
-          console.log('error getting user info', typeof ex.message);
-          if (ex.message === '401') {
-            console.log('logging out');
-            logout();
-          }
-        });
-    }
-  }, [client, userInfo]);
 
   function logout() {
     setUserKey(null);
     setUserInfo(null);
-    AsyncStorage.removeItem(USER_ID_KEY_STORAGE);
   }
 
   return (

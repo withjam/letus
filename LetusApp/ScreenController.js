@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { AppContext } from './AppContext';
-
 import { Splash } from './Screens/Splash';
 import { Login } from './Screens/Login';
 import { Posts } from './Screens/Posts';
 import { NewUser } from './Components/NewUser';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator, SafeAreaView } from 'react-native';
+import { COLORS, SIZES, styles } from './Styles';
 
 export const ScreenController = () => {
   const { userInfo, userKey, loaded, posts } = useContext(AppContext);
@@ -15,11 +15,11 @@ export const ScreenController = () => {
   if (!userKey) {
     return <Login />;
   }
-  if (!userInfo) {
+  if (!userInfo || userInfo.nickname) {
     return (
-      <View>
-        <Text>Loading</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator color={COLORS.secondary} size='large' />
+      </SafeAreaView>
     );
   }
   if (userInfo.__new) {
