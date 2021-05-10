@@ -4,6 +4,7 @@ const {
   contextUnauthorized,
   contextInvalid,
   getAuthToken,
+  respondWithRecords,
 } = require('../shared/LetusShared');
 
 module.exports = async function (context, req) {
@@ -32,18 +33,7 @@ module.exports = async function (context, req) {
         context.log(query);
         const params = { name, pic, userid };
         const result = await client.query(query, params);
-        const body = {
-          records: [],
-        };
-        body.stats = result.getStatistics();
-        while (result.hasNext()) {
-          body.records.push(result.next());
-        }
-        client.close();
-        console.log('got results', body);
-        context.res = {
-          body,
-        };
+        respondWithRecords(result, client, context);
       }
     } catch (ex) {
       context.log(ex);

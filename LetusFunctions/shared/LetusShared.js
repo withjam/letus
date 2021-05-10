@@ -40,4 +40,17 @@ module.exports = {
       },
     };
   },
+  respondWithRecords: function (result, client, context) {
+    const body = {
+      records: [],
+    };
+    body.stats = result.getStatistics();
+    while (result.hasNext()) {
+      body.records.push(result.next());
+    }
+    client.close();
+    context.res = {
+      body,
+    };
+  },
 };

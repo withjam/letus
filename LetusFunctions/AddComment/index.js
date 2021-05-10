@@ -1,44 +1,38 @@
-const RedisGraph = require('redisgraph.js').Graph;
-const client = new RedisGraph(
-  process.env.REDIS_GRAPH,
-  process.env.REDIS_HOST,
-  process.env.REDIS_PORT,
-  { password: process.env.REDIS_PASS }
-);
+const {
+  verify,
+  useRedisClient,
+  contextUnauthorized,
+  contextInvalid,
+  getAuthToken,
+  respondWithRecords,
+} = require('../shared/LetusShared');
 
 module.exports = async function (context, req) {
   context.log('AddComment function processed a request.');
   const res = {};
   const { body } = req;
 
-  if (!body || !body.text || !body.onPost) {
-    res.status = 422;
-    res.body = {
-      message: 'Invalid or missing POST body',
-    };
+  if (!body) {
+    contextInvalid(context);
   } else {
-    const client = new RedisGraph(
-      process.env.REDIS_GRAPH,
-      process.env.REDIS_HOST,
-      process.env.REDIS_PORT,
-      { password: process.env.REDIS_PASS }
-    );
-    const { name, text, onPost, replyTo } = req.body;
-    const now = new Date().toISOString();
-    // TODO: Make this handle replies
-    const result = await client.query(
-      'MATCH (me:Person), (post:Post) WHERE me.name = $name AND ID(post) = $onPost CREATE (me)-[:commented]->(comment:Comment {text:$text,created:$now}) CREATE (post)-[:hasComment]->(comment) RETURN post',
-      { name, text, onPost, now }
-    );
-    const body = {};
-    body.stats = result.getStatistics();
-    while (result.hasNext()) {
-      body.record = result.next();
+    try {
+      const authToken = getAuthToken(req);
+      if (!authToken) throw 'Missing auth token';
+      userid = await verify(authToken);
+      // ensure we got a user id
+      if (!userid) throw 'Invalid auth token';
+      const client = useRedisClient();
+      const { text, onPost, replyTo } = req.body;
+      const now = new Date().toISOString();
+      // TODO: Make this handle replies
+      const result = await client.query(
+        'MATCH (me:Person), (post:Post) WHERE me.userid = $userid AND ID(post) = $onPost CREATE (me)-[:commented]->(comment:Comment {text:$text,created:$now}) CREATE (post)-[:hasComment]->(comment) RETURN post',
+        { userid, text, onPost, now }
+      );
+      respondWithRecords(result, client, context);
+    } catch (ex) {
+      context.log(ex);
+      contextUnauthorized(context);
     }
-    client.close();
-    res.body = {
-      body,
-    };
   }
-  context.res = res;
 };
