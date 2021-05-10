@@ -91,6 +91,7 @@ export const Login = () => {
               style={[styles.textInput]}
               placeholder='Email address'
               autoCapitalize='none'
+              autoCorrect={false}
             />
           </View>
           <View style={styles.formInput}>
@@ -101,6 +102,7 @@ export const Login = () => {
               placeholder='Password'
               secureTextEntry={!showPassword}
               autoCapitalize='none'
+              autoCorrect={false}
             />
           </View>
           {mode === MODE.register ? (
@@ -113,6 +115,7 @@ export const Login = () => {
                   placeholder='Confirm password'
                   secureTextEntry={!showPassword}
                   autoCapitalize='none'
+                  autoCorrect={false}
                 />
               </View>
               <View style={styles.formInput}>
@@ -121,6 +124,7 @@ export const Login = () => {
                   onChangeText={setNickname}
                   style={[styles.textInput]}
                   placeholder='Nickname'
+                  autoCorrect={false}
                 />
               </View>
             </>

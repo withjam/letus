@@ -280,7 +280,7 @@ styleDef.menuItemSubText = {
 styleDef.textInput = {
   ...styleDef.text,
   width: '80%',
-  fontSize: SIZES.md,
+  fontSize: SIZES.sm,
   paddingVertical: SIZES.xs,
   paddingHorizontal: GUTTER,
   borderWidth: 1,
@@ -325,8 +325,8 @@ export const styles = StyleSheet.create(styleDef);
 export const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     ...styleDef.text,
-    fontSize: SIZES.md,
-    paddingVertical: SIZES.xs,
+    fontSize: SIZES.xs,
+    paddingVertical: SIZES.sm,
     paddingHorizontal: GUTTER,
     borderWidth: 1,
     borderColor: COLORS.dark,
@@ -335,7 +335,7 @@ export const pickerSelectStyles = StyleSheet.create({
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    fontSize: SIZES.lg,
+    fontSize: SIZES.sm,
     paddingHorizontal: GUTTER,
     paddingVertical: 8,
     borderWidth: 0.5,

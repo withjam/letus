@@ -54,9 +54,9 @@ export const AppContextProvider = ({ children }) => {
           setUserInfo(deets);
         }
         // load their posts
-        // apiClient.getPosts(userKey).then((records) => {
-        //   setPosts(records);
-        // });
+        apiClient.getPosts(userKey).then((records) => {
+          setPosts(records);
+        });
       })();
     }
   }, [userKey]);

@@ -49,7 +49,7 @@ LetusApiClient.prototype.getPosts = async function () {
   }
   return result;
 };
-LetusApiClient.prototype.createPost = async function (text, asUser) {
+LetusApiClient.prototype.createPost = async function (text) {
   let results = [];
   try {
     const jsonData = { text };
@@ -61,13 +61,11 @@ LetusApiClient.prototype.createPost = async function (text, asUser) {
     const { sentiment } = await analyzeResponse.json();
     console.log({
       text,
-      name: asUser,
       categories,
       sentiment,
     });
-    const res = await postData('/CreatePost', {
+    const res = await this.postData('/CreatePost', {
       text,
-      name: asUser,
       categories,
       sentiment,
     });

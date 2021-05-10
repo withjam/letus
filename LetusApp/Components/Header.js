@@ -3,7 +3,6 @@ import { View, Text, Pressable } from 'react-native';
 import { styles, COLORS, SIZES } from '../Styles';
 import { Ionicons } from '@expo/vector-icons';
 import { CreatePost } from '../Components/CreatePost';
-import { LetusApiClient } from '../LetusApiClient';
 import { AppContext } from '../AppContext';
 import { Sidebar } from './Sidebar';
 
@@ -14,7 +13,7 @@ export const Header = () => {
 
   function doSave(text) {
     setShowModal(false);
-    LetusApiClient.createPost(text, context.user);
+    context.client.createPost(text);
   }
 
   return (
