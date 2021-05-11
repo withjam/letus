@@ -105,6 +105,17 @@ LetusApiClient.prototype.editUser = async function (info) {
   }
   return result.length ? result[0] : null;
 };
+LetusApiClient.prototype.addComment = async function (text, onPost) {
+  let result = {};
+  try {
+    const res = await this.postData('/AddComment', { text, onPost });
+    const json = await res.json();
+    result = mapRecords(json);
+  } catch (ex) {
+    console.log(ex);
+  }
+  return result.length ? result[0] : null;
+};
 LetusApiClient.prototype.postData = function (url, data) {
   return fetch(LETUS_API_URL + url, {
     method: 'POST',

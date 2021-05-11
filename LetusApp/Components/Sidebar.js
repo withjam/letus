@@ -58,7 +58,7 @@ export const Sidebar = ({ shown, onClose }) => {
             <View style={{ flex: 1 }}>
               <View style={styles.sidebarTop}>
                 <Text style={styles.text}>
-                  {context.userInfo.me.properties.name}
+                  {context.userInfo.properties.name}
                 </Text>
                 <Pressable onPress={startClose}>
                   <Text

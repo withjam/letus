@@ -28,9 +28,9 @@ export const AppContextProvider = ({ children }) => {
           setUserKey(idToken);
         });
       } else {
-        console.log('user is null');
         setUserInfo(null);
         setUserKey(null);
+        setPosts([]);
       }
     });
   }, []);
@@ -44,14 +44,14 @@ export const AppContextProvider = ({ children }) => {
       setClient(apiClient);
       (async () => {
         let deets = await apiClient.getUserInfo();
-        console.log('got deets from apiClient ', deets, userInfo);
+        console.log('got deets from apiClient ', deets.me, userInfo);
         // if no userInfo, create new user
         if (!deets && userInfo && userInfo.nickname) {
           deets = await apiClient.editUser({ name: userInfo.nickname });
           console.log('got new deets', deets);
-          setUserInfo(deets);
+          setUserInfo(deets.me);
         } else {
-          setUserInfo(deets);
+          setUserInfo(deets.me);
         }
         // load their posts
         apiClient.getPosts(userKey).then((records) => {
@@ -64,6 +64,7 @@ export const AppContextProvider = ({ children }) => {
   function logout() {
     setUserKey(null);
     setUserInfo(null);
+    setPosts([]);
   }
 
   return (

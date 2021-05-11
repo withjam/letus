@@ -1,14 +1,46 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { styles, COLORS, SIZES } from '../Styles';
+import React, { useContext, useRef, useState } from 'react';
+import { View, Text, Pressable, Animated, TextInput } from 'react-native';
+import { styles } from '../Styles';
 import dayjs from '../dayjs-local';
 import { Meatballs } from './Meatballs';
 import { IgnorePostSettings } from './IgnorePostSettings';
+import { CommentView } from './CommentView';
+import { AppContext } from '../AppContext';
 
 export const PostView = ({ data }) => {
-  const { post, poster, comments } = data;
+  const context = useContext(AppContext);
+  const { post, poster, comments, commenters } = data;
+  const [myComment, setMyComment] = useState('');
   const meatballRef = useRef();
   const [showIgnoreSettings, setShowIgnoreSettings] = useState(false);
+  const [showingComments, setShowingComments] = useState(false);
+  const slideAnim = useRef(new Animated.Value(0)).current;
+
+  function showComments() {
+    setShowingComments(true);
+    Animated.timing(slideAnim, {
+      toValue: 250,
+      duration: 250,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  function hideComments() {
+    setShowingComments(false);
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 250,
+      useNativeDriver: false,
+    }).start();
+  }
+
+  function toggleComments() {
+    if (showingComments) {
+      hideComments();
+    } else {
+      showComments();
+    }
+  }
 
   function hideIgnore() {
     setShowIgnoreSettings(false);
@@ -16,6 +48,13 @@ export const PostView = ({ data }) => {
 
   function showIgnore() {
     setShowIgnoreSettings(true);
+  }
+
+  function addComment() {
+    if (myComment && myComment.length) {
+      context.client.addComment(myComment, post.id);
+      setMyComment('');
+    }
   }
 
   return post ? (
@@ -57,10 +96,38 @@ export const PostView = ({ data }) => {
       </View>
       <Text style={styles.postText}>{post.properties.text}</Text>
       <View style={styles.postFooter}>
-        <Text style={styles.postFooterText}>
-          {comments.length ? comments.length : 'no'} comments
-        </Text>
+        <Pressable onPress={toggleComments}>
+          <Text style={styles.postFooterText}>
+            {comments.length ? (showingComments ? 'Hide ' : 'View ') : ''}
+            {comments.length ? comments.length : 'no'} comment
+            {comments.length === 1 ? '' : 's'}
+          </Text>
+        </Pressable>
       </View>
+      <Animated.View style={[styles.commentArea, { height: slideAnim }]}>
+        {comments.map((comment, index) => (
+          <CommentView
+            key={comment.id}
+            comment={comment}
+            commenter={commenters[index]}
+          />
+        ))}
+        {showingComments ? (
+          <View style={styles.addComment}>
+            <TextInput
+              style={styles.commentBox}
+              value={myComment}
+              onChangeText={setMyComment}
+              placeholder='Add your comment...'
+              multiline
+              maxLength={1000}
+            />
+            <Pressable onPress={addComment}>
+              <Text style={styles.textInputButton}>Post</Text>
+            </Pressable>
+          </View>
+        ) : null}
+      </Animated.View>
     </View>
   ) : null;
 };

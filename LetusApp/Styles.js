@@ -146,7 +146,7 @@ styleDef.cancelText = {
 
 styleDef.postContainer = {
   backgroundColor: COLORS.white,
-  marginBottom: 1,
+  marginBottom: 6,
 };
 
 styleDef.postHeader = {
@@ -318,6 +318,64 @@ styleDef.sidebarItem = {
 
 styleDef.sidebarText = {
   ...styleDef.text,
+};
+
+styleDef.commentArea = {
+  borderTopColor: COLORS.shadow,
+  borderTopWidth: 1,
+};
+
+styleDef.commentItem = {
+  padding: SIZES.md,
+  borderBottomColor: COLORS.shadow,
+  borderBottomWidth: 1,
+};
+
+styleDef.commentItemMine = {
+  ...styleDef.commentItem,
+  backgroundColor: COLORS.light,
+};
+
+styleDef.commentHeader = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+};
+
+styleDef.commentHeaderText = {
+  ...styleDef.strong,
+  fontSize: SIZES.xs,
+};
+
+styleDef.commentHeaderWhen = {
+  ...styleDef.textMuted,
+  fontSize: SIZES.xs,
+};
+
+styleDef.commentTextArea = {
+  paddingVertical: SIZES.xs,
+};
+
+styleDef.commentText = {
+  ...styleDef.text,
+  fontSize: SIZES.sm,
+};
+
+styleDef.addComment = {
+  margin: SIZES.md,
+  fontSize: SIZES.sm,
+  padding: SIZES.sm,
+  backgroundColor: COLORS.shadow,
+  color: COLORS.muted,
+  borderRadius: 12,
+  flexDirection: 'row',
+  alignItems: 'center',
+};
+
+styleDef.commentBox = {
+  flex: 1,
+  paddingRight: SIZES.xs,
+  color: COLORS.muted,
 };
 
 export const styles = StyleSheet.create(styleDef);
