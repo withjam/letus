@@ -45,9 +45,11 @@
 
 * Letus uses Firebase for authentication in both the Expo app and the Azure functions
 
-![Redis Insight](./screens/redisInsight.png)
-
 ## RedisGraph Commands
+
+_Note:  App was developed using free Redis Enterprise Cloud database with **RedisGraph** module: redis-12183.c251.east-us-mz.azure.cloud.redislabs.com_
+
+![Redis Insight](./screens/redisInsight.png)
 
 * `GetPosts` - The core of Letus.  Uses cypher to traverse the current user's network and return the relevant, most recent posts:
   ```
