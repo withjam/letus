@@ -4,6 +4,7 @@
 |||
 |---|---|
 | ![Letus Screen](./screens/posts.png) | ![Letus Filtering](./screens/ignoreSettings2.png) |
+![Letus Screen](./screens/posts2.png) | ![Letus Filtering](./screens/ignoreSettings4.png) |
 ## Project Structure 
 
 * `LetusApp` is an Expo project for easy mobile development.  _see the [expo docs](https://docs.expo.io/) if you are new to expo_
@@ -45,6 +46,7 @@
 
 * Letus uses Firebase for authentication in both the Expo app and the Azure functions
 
+![Redis Insight](./screens/redisInsight.png)
 
 ## RedisGraph Commands
 
