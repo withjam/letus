@@ -49,6 +49,13 @@ const styleDef = {
   },
 };
 
+styleDef.splash = {
+  flex: 1,
+  backgroundColor: COLORS.white,
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
 styleDef.main = {
   ...styleDef.container,
   alignSelf: 'stretch',
@@ -365,7 +372,9 @@ styleDef.addComment = {
   margin: SIZES.md,
   fontSize: SIZES.sm,
   padding: SIZES.sm,
-  backgroundColor: COLORS.shadow,
+  backgroundColor: COLORS.light,
+  borderColor: COLORS.dark,
+  borderWidth: 1,
   color: COLORS.muted,
   borderRadius: 12,
   flexDirection: 'row',

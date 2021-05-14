@@ -21,10 +21,9 @@ export const AppContextProvider = ({ children }) => {
     firebase.auth().onAuthStateChanged((user) => {
       setLoaded(true);
       if (user) {
-        console.log('auth user change', user);
         const uid = user.uid;
         user.getIdToken(true).then((idToken) => {
-          console.log(uid, idToken);
+          console.log('Debug: User Details', uid, idToken);
           setUserKey(idToken);
         });
       } else {
@@ -38,17 +37,14 @@ export const AppContextProvider = ({ children }) => {
   // Whenever the user key changes...
   useEffect(() => {
     if (userKey) {
-      console.log('new api client', userKey);
       // create instance of client bound to this user
       const apiClient = new LetusApiClient(userKey);
       setClient(apiClient);
       (async () => {
         let deets = await apiClient.getUserInfo();
-        console.log('got deets from apiClient ', deets.me, userInfo);
         // if no userInfo, create new user
         if (!deets && userInfo && userInfo.nickname) {
           deets = await apiClient.editUser({ name: userInfo.nickname });
-          console.log('got new deets', deets);
           setUserInfo(deets.me);
         } else {
           setUserInfo(deets.me);
@@ -67,6 +63,13 @@ export const AppContextProvider = ({ children }) => {
     setPosts([]);
   }
 
+  function reloadPosts() {
+    // reload their posts
+    client.getPosts(userKey).then((records) => {
+      setPosts(records);
+    });
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -81,6 +84,7 @@ export const AppContextProvider = ({ children }) => {
         setIgnorePost,
         client,
         logout,
+        reloadPosts,
       }}
     >
       {children}

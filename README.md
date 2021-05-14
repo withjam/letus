@@ -1,4 +1,9 @@
 # Letus
+![Letus Splash](./screens/letus_cropped.jpg)
+
+|||
+|---|---|
+| ![Letus Screen](./screens/posts.png) | ![Letus Filtering](./screens/ignoreSettings2.png) |
 ## Project Structure 
 
 * `LetusApp` is an Expo project for easy mobile development.  _see the [expo docs](https://docs.expo.io/) if you are new to expo_
@@ -34,4 +39,107 @@
   
 ### LetusFunctions
 
-* Azure functions can be run locally.  Easiest option is to use [VS Code Extension](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=csharp) and then use `f5` to launch in debug mode
+* Azure functions can be run locally.  The recommended option is to use [VS Code Extension](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=csharp) and then use `f5` to launch in debug mode
+
+### Authentication
+
+* Letus uses Firebase for authentication in both the Expo app and the Azure functions
+
+
+## RedisGraph Commands
+
+* `GetPosts` - The core of Letus.  Uses cypher to traverse the current user's network and return the relevant, most recent posts:
+  ```
+  MATCH (me:Person {userid: $userid}) 
+    OPTIONAL MATCH (me)-[:ignores]->(ign:IgnoreSetting) 
+    WITH me, ign  
+    MATCH (poster:Person)-[:posted]->(post:Post) 
+    WHERE (poster = me OR (poster)-[:friended]-(me)) 
+    AND (NOT (post)-[:inCategory]->(:Category {name:ign.category}) AND NOT (post)<-[:posted]-(:Person {userid:ign.poster})) 
+    WITH post, poster, me 
+    OPTIONAL MATCH (post)-[:hasComment]->(comment:Comment)<-[:commented]-(commenter:Person) 
+    WHERE commenter = me OR (commenter)-[:friended]-(me) 
+    WITH me, post, poster, collect(comment) as comments, collect(commenter) as commenters 
+    ORDER BY post.created DESC 
+    SKIP $skip
+    LIMIT $limit
+    RETURN post, poster, comments, commenters
+    ```
+* `CreatePost` - Creates a new post with additional information from NLP processing.
+    ```
+    MATCH (me:Person {userid:$userid}) ${categories
+    .map(
+    (cat, index) =>
+        'MERGE (cat' + index + ':Category {name: $cat' + index + '})'
+    )
+    .join(
+    ' '
+    )}  
+    MERGE (sentiment:Sentiment {name: $sentiment}) 
+    CREATE (me)-[:posted]->(post:Post {text:$text,created:$now}) 
+    MERGE (post)-[:hasSentiment]->(sentiment) ${categories
+    .map((cat, index) => 'MERGE (post)-[:inCategory]->(cat' + index + ')')
+    .join(' ')} 
+    RETURN post
+    ```
+* `AddComment` - Add your comment to a connection's Post.
+    ```
+    MATCH (me:Person), (post:Post) 
+    WHERE me.userid = $userid 
+    AND ID(post) = $onPost 
+    CREATE (me)-[:commented]->(comment:Comment {text:$text,created:$now}) 
+    CREATE (post)-[:hasComment]->(comment) 
+    RETURN post
+    ```
+*  `AddFriend` - Add a new connection from your direction. Note: single-direction `:friended` relationships determine pending friend requests
+    ```
+    MATCH (me:Person { userid: $userid }) 
+    MATCH (them:Person { userid: $themid })
+    MERGE (me)-[:friended]->(them)
+    RETURN me, them
+    ```
+* `GetFriendRequests` - Return the list of `Person` nodes who have `:friended` you but are not friended by you.
+    ```
+    MATCH (me:Person {userid: $userid}) 
+    WITH me 
+    MATCH (them:Person)-[:friended]->(me) 
+    WHERE NOT (me)-[:friended]->(them) 
+    RETURN them
+    ```
+
+## NLP Commands
+Using the free tier of [GCP Natural Language](https://cloud.google.com/natural-language), we apply both sentiment analysis and text classification to all posts made in the system.
+
+* `AnalyzeSentiment` 
+    ```
+    const sslCreds = getApiKeyCredentials();
+    const client = new language.LanguageServiceClient({ sslCreds });
+
+    const document = {
+      content: text,
+      type: 'PLAIN_TEXT',
+    };
+
+    const [result] = await client.analyzeSentiment({ document: document });
+    sentiment = mapSentiment(result.documentSentiment.score || 0);
+    ```
+
+* `ClassifyText` - Returns a list of matching [NLP Categories](https://cloud.google.com/natural-language/docs/categories)
+    ```
+    let content = text;
+    // GCP requires 20 words
+    // we pad with prepositions if between 10-19 words for max coverage
+    if (len < 20) {
+      content = [...content.split(' '), ...preps.slice(0, 20 - len)].join(' ');
+    }
+    const sslCreds = getApiKeyCredentials();
+    const client = new language.LanguageServiceClient({ sslCreds });
+
+    const document = {
+      content,
+      type: 'PLAIN_TEXT',
+    };
+
+    const [result] = await client.classifyText({ document: document });
+    categories = result.categories || [];
+    ```

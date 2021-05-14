@@ -19,7 +19,7 @@ export const PostView = ({ data }) => {
   function showComments() {
     setShowingComments(true);
     Animated.timing(slideAnim, {
-      toValue: 250,
+      toValue: comments.length * 100 + 100,
       duration: 250,
       useNativeDriver: false,
     }).start();
@@ -48,6 +48,12 @@ export const PostView = ({ data }) => {
 
   function showIgnore() {
     setShowIgnoreSettings(true);
+  }
+
+  function saveIgnore({ poster, category, sentiment }) {
+    context.client.addIgnoreSetting({ poster, category, sentiment });
+    context.reloadPosts();
+    hideIgnore();
   }
 
   function addComment() {
@@ -84,7 +90,7 @@ export const PostView = ({ data }) => {
               <IgnorePostSettings
                 shown={showIgnoreSettings}
                 onCancel={hideIgnore}
-                onSave={hideIgnore}
+                onSave={saveIgnore}
                 data={data}
               />
             </View>
@@ -105,13 +111,15 @@ export const PostView = ({ data }) => {
         </Pressable>
       </View>
       <Animated.View style={[styles.commentArea, { height: slideAnim }]}>
-        {comments.map((comment, index) => (
-          <CommentView
-            key={comment.id}
-            comment={comment}
-            commenter={commenters[index]}
-          />
-        ))}
+        {showingComments
+          ? comments.map((comment, index) => (
+              <CommentView
+                key={comment.id}
+                comment={comment}
+                commenter={commenters[index]}
+              />
+            ))
+          : null}
         {showingComments ? (
           <View style={styles.addComment}>
             <TextInput
@@ -123,7 +131,7 @@ export const PostView = ({ data }) => {
               maxLength={1000}
             />
             <Pressable onPress={addComment}>
-              <Text style={styles.textInputButton}>Post</Text>
+              <Text style={styles.textInputButton}>Send</Text>
             </Pressable>
           </View>
         ) : null}

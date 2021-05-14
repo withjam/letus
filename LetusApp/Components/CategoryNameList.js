@@ -2,7 +2,7 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet, Pressable } from 'react-native';
 import { styles, COLORS, SIZES } from '../Styles';
 
-const categories = require('../ContentCategories.json');
+const categories = require('../ContentCategoriesDemo.json');
 
 export const ANY_CATEGORY = '_anything_';
 

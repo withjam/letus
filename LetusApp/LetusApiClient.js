@@ -2,7 +2,6 @@ import { LETUS_API_URL } from '@env';
 
 export async function fetchGoogleUserInfo(idToken) {
   try {
-    console.log('auth', idToken);
     const info = await fetch(
       'https://oauth2.googleapis.com/tokeninfo?id_token=' + idToken
     );
@@ -78,7 +77,6 @@ LetusApiClient.prototype.createPost = async function (text) {
 };
 LetusApiClient.prototype.getUserInfo = async function () {
   let result = [];
-  console.log('getuserInf', this.authHeader());
   try {
     const res = await fetch(LETUS_API_URL + '/GetUser', {
       headers: {
@@ -109,6 +107,25 @@ LetusApiClient.prototype.addComment = async function (text, onPost) {
   let result = {};
   try {
     const res = await this.postData('/AddComment', { text, onPost });
+    const json = await res.json();
+    result = mapRecords(json);
+  } catch (ex) {
+    console.log(ex);
+  }
+  return result.length ? result[0] : null;
+};
+LetusApiClient.prototype.addIgnoreSetting = async function ({
+  category,
+  sentiment,
+  poster,
+}) {
+  let result = {};
+  try {
+    const res = await this.postData('/AddIgnoreSetting', {
+      category,
+      sentiment,
+      poster,
+    });
     const json = await res.json();
     result = mapRecords(json);
   } catch (ex) {

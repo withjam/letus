@@ -11,9 +11,10 @@ export const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
 
-  function doSave(text) {
+  async function doSave(text) {
     setShowModal(false);
-    context.client.createPost(text);
+    await context.client.createPost(text);
+    await context.reloadPosts();
   }
 
   return (

@@ -35,7 +35,15 @@ export const IgnorePostSettings = ({ data, shown, onCancel, onSave }) => {
             <Text style={styles.cancelText}>Cancel</Text>
           </Pressable>
           <Text style={styles.modalHeaderText}>Ignore Settings</Text>
-          <Pressable onPress={() => onSave(text)}>
+          <Pressable
+            onPress={() =>
+              onSave({
+                poster: ignoreTarget === 'anybody' ? undefined : poster.id,
+                sentiment: ignoreSentiment,
+                category: ignoreCategories,
+              })
+            }
+          >
             <Text style={styles.cancelText}>Save</Text>
           </Pressable>
         </View>
