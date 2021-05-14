@@ -1,4 +1,3 @@
-# Letus
 ![Letus Splash](./screens/letus_cropped.jpg)
 
 |||
