@@ -1,9 +1,9 @@
-![Letus Splash](https://github.com/withjam/letus/blob/main//screens/letus_cropped.jpg)
+![Letus Splash](https://github.com/withjam/letus/raw/main/screens/letus_cropped.jpg)
 
 |||
 |---|---|
-| ![Letus Screen](https://github.com/withjam/letus/blob/main//screens/posts.png) | ![Letus Filtering](https://github.com/withjam/letus/blob/main//screens/ignoreSettings2.png) |
-![Letus Screen](https://github.com/withjam/letus/blob/main/screens/posts2.png) | ![Letus Filtering](https://github.com/withjam/letus/blob/main//screens/ignoreSettings4.png) |
+| ![Letus Screen](https://github.com/withjam/letus/raw/main/screens/posts.png) | ![Letus Filtering](https://github.com/withjam/letus/raw/main/screens/ignoreSettings2.png) |
+![Letus Screen](https://github.com/withjam/letus/raw/main/screens/posts2.png) | ![Letus Filtering](https://github.com/withjam/letus/raw/main/screens/ignoreSettings4.png) |
 ## Project Structure 
 
 * `LetusApp` is an Expo project for easy mobile development.  _see the [expo docs](https://docs.expo.io/) if you are new to expo_
@@ -75,7 +75,7 @@ You can run just the Expo Go App localy to use, and develop, the react native ap
 
 _Note:  App was developed using free Redis Enterprise Cloud database with **RedisGraph** module: redis-12183.c251.east-us-mz.azure.cloud.redislabs.com_
 
-![Redis Insight](https://github.com/withjam/letus/blob/main//screens/redisInsight.png)
+![Redis Insight](https://github.com/withjam/letus/raw/main/screens/redisInsight.png)
 
 * `GetPosts` - The core of Letus.  Uses cypher to traverse the current user's network and return the relevant, most recent posts:
   ```
