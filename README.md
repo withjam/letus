@@ -141,6 +141,15 @@ _Note:  App was developed using free Redis Enterprise Cloud database with **Redi
     MERGE (me)-[:ignores]->(ignore:IgnoreSetting {poster:$themid, category: $category, sentiment: $sentiment})
     RETURN me, ignore
     ```
+* `FindFriends` - Search for unfriended People by name
+  ```
+  MATCH (them:Person) 
+  MATCH (me:Person {userid:$userid}) 
+  WHERE NOT them.userid = $userid 
+  AND them.name STARTS WITH $name 
+  AND NOT (me)-[:friended]->(them) 
+  RETURN them
+  ```
 
 ## NLP Commands
 Using the free tier of [GCP Natural Language](https://cloud.google.com/natural-language), we apply both sentiment analysis and text classification to all posts made in the system.
