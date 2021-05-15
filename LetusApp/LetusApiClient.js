@@ -1,5 +1,7 @@
 import { LETUS_API_URL } from '@env';
 
+console.log('API URL', LETUS_API_URL);
+
 export async function fetchGoogleUserInfo(idToken) {
   try {
     const info = await fetch(

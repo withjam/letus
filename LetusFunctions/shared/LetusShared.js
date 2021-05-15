@@ -1,10 +1,9 @@
 const RedisGraph = require('redisgraph.js').Graph;
-const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client(process.env.GOOGLE_OAUTH_CLIENT);
 const firebaseAdmin = require('firebase-admin');
+const serviceAccount = require('./serviceAccount.json');
 
 firebaseAdmin.initializeApp({
-  credential: firebaseAdmin.credential.applicationDefault(),
+  credential: firebaseAdmin.credential.cert(serviceAccount),
 });
 
 module.exports = {

@@ -34,17 +34,43 @@
 * create a `.env.local` file to store your local configuration
 * set the value of `LETUS_API_URL` to the location of your API (can use `.env` if local functions)
 * set the value of `GOOGLE_WEB_CLIENT_ID` to use a Web OAUTH credential created in your Google Identity account.
+* set value of firebase config in the `.env` or `.env.local` file
+  * FIREBASE_API_KEY=
+  * FIREBASE_AUTH_DOMAIN=
+  * FIREBASE_PROJECT_ID=
+  * FIREBASE_STORAGE_BUCKET=
+  * FIREBASE_MEASSGE_SENDER_ID=
+  * FIREBASE_APP_ID=
 * `expo start`
 * press `i` to launch iOS simulator or `a` for android.  (note: android simulator requires Android Studio and sdk setup)
   
 ### LetusFunctions
 
 * Azure functions can be run locally.  The recommended option is to use [VS Code Extension](https://docs.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=csharp) and then use `f5` to launch in debug mode
+* Configure the following environment variables (either in `local.settings.json` or in Azure)
+  * `REDIS_HOST` The host of the RedisGraph database
+  * `REDIS_PORT` The port used by the RedisGraph database
+  * `REDIS_PASS` Password for the default Redis user
+  * `REDIS_GRAPH` The name of the graph to use
+  * `GCP_API_KEY` Google Cloud Platform API Key used for Language processing (`AnalyzeSentiment` and `ClassifyText`)
+* Add your `serviceAccount.json` file to `LetusFunctions/shared` to configure the API's firebase-admin
 
 ### Authentication
 
 * Letus uses Firebase for authentication in both the Expo app and the Azure functions
+* [Create a project for Firebase Auth (web)](https://firebase.google.com/docs/auth/web/start)
 
+### RedisGraph (on RedisLabs)
+
+* [Create a RedisGraph instance](https://docs.redislabs.com/latest/modules/redisgraph/redisgraph-quickstart/)
+
+### Express local setup (local Expo Go App only)
+
+You can run just the Expo Go App localy to use, and develop, the react native app. By accessing existing (free) firebase auth and existing (free) Azure functions deployed for DEV only.
+
+* Copy the contents of `env.dev.example` into your `.env` file
+* Launch the app via `expo start`
+* Register a new user via the mobile simulator and you're in!
 ## RedisGraph Commands
 
 _Note:  App was developed using free Redis Enterprise Cloud database with **RedisGraph** module: redis-12183.c251.east-us-mz.azure.cloud.redislabs.com_
@@ -108,6 +134,12 @@ _Note:  App was developed using free Redis Enterprise Cloud database with **Redi
     MATCH (them:Person)-[:friended]->(me) 
     WHERE NOT (me)-[:friended]->(them) 
     RETURN them
+    ```
+* `AddIgnoreSetting` - Add a new IgnoreSetting to a User
+    ```
+    MATCH (me:Person { userid: $userid }) 
+    MERGE (me)-[:ignores]->(ignore:IgnoreSetting {poster:$themid, category: $category, sentiment: $sentiment})
+    RETURN me, ignore
     ```
 
 ## NLP Commands
