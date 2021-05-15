@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, TextInput } from 'react-native';
-import { styles } from '../Styles';
+import { COLORS, SIZES, styles } from '../Styles';
 import dayjs from '../dayjs-local';
 import { Meatballs } from './Meatballs';
 import { IgnorePostSettings } from './IgnorePostSettings';
@@ -56,10 +56,12 @@ export const PostView = ({ data }) => {
     hideIgnore();
   }
 
-  function addComment() {
+  async function addComment() {
     if (myComment && myComment.length) {
-      context.client.addComment(myComment, post.id);
+      const newComment = myComment;
       setMyComment('');
+      await context.client.addComment(newComment, post.id);
+      context.reloadPosts();
     }
   }
 
@@ -130,7 +132,13 @@ export const PostView = ({ data }) => {
               multiline
               maxLength={1000}
             />
-            <Pressable onPress={addComment}>
+            <Pressable
+              onPress={addComment}
+              style={{
+                paddingHorizontal: SIZES.sm,
+                paddingVertical: 4,
+              }}
+            >
               <Text style={styles.textInputButton}>Send</Text>
             </Pressable>
           </View>

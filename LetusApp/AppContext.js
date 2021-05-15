@@ -15,6 +15,7 @@ export const AppContextProvider = ({ children }) => {
   const [client, setClient] = useState();
   const [userKey, setUserKey] = useState();
   const [bigError, setBigError] = useState(false);
+  const [findingFriends, setFindingFriends] = useState(false);
 
   // when first initialized
   useEffect(() => {
@@ -85,6 +86,8 @@ export const AppContextProvider = ({ children }) => {
         client,
         logout,
         reloadPosts,
+        findingFriends,
+        setFindingFriends,
       }}
     >
       {children}

@@ -135,6 +135,31 @@ LetusApiClient.prototype.addIgnoreSetting = async function ({
   }
   return result.length ? result[0] : null;
 };
+
+LetusApiClient.prototype.findFriends = async function (name) {
+  let result = {};
+  try {
+    const res = await this.postData('/FindFriends', { name });
+    const json = await res.json();
+    result = mapRecords(json);
+  } catch (ex) {
+    console.log(ex);
+  }
+  return result;
+};
+
+LetusApiClient.prototype.addFriend = async function (them) {
+  let result = {};
+  try {
+    const res = await this.postData('/AddFriend', { them });
+    const json = await res.json();
+    result = mapRecords(json);
+  } catch (ex) {
+    console.log(ex);
+  }
+  return result;
+};
+
 LetusApiClient.prototype.postData = function (url, data) {
   return fetch(LETUS_API_URL + url, {
     method: 'POST',

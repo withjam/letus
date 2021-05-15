@@ -6,9 +6,10 @@ import { Posts } from './Screens/Posts';
 import { NewUser } from './Components/NewUser';
 import { View, Text, ActivityIndicator, SafeAreaView } from 'react-native';
 import { COLORS, SIZES, styles } from './Styles';
+import { FindAFriend } from './Components/FindAFriend';
 
 export const ScreenController = () => {
-  const { userInfo, userKey, loaded, posts } = useContext(AppContext);
+  const { userInfo, userKey, loaded, findingFriends } = useContext(AppContext);
   if (!loaded) {
     return <Splash />;
   }
@@ -24,6 +25,9 @@ export const ScreenController = () => {
   }
   if (userInfo.__new) {
     return <NewUser />;
+  }
+  if (findingFriends) {
+    return <FindAFriend />;
   }
   return <Posts />;
 };

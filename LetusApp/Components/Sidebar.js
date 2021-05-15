@@ -42,6 +42,12 @@ export const Sidebar = ({ shown, onClose }) => {
     switch (item) {
       case 'signout':
         firebase.auth().signOut();
+      case 'friends':
+        context.setFindingFriends(true);
+        break;
+      case 'feed':
+        context.setFindingFriends(false);
+        break;
     }
   }
 
@@ -71,11 +77,17 @@ export const Sidebar = ({ shown, onClose }) => {
                   </Text>
                 </Pressable>
               </View>
-              <Pressable style={styles.sidebarItem}>
+              <Pressable
+                style={styles.sidebarItem}
+                onPress={() => makeSelection('feed')}
+              >
                 <Text style={styles.sidebarText}>Your Feed</Text>
               </Pressable>
-              <Pressable style={styles.sidebarItem}>
-                <Text style={styles.sidebarText}>Manage Friends</Text>
+              <Pressable
+                style={styles.sidebarItem}
+                onPress={() => makeSelection('friends')}
+              >
+                <Text style={styles.sidebarText}>Find Friends</Text>
               </Pressable>
               <Pressable
                 style={styles.sidebarItem}

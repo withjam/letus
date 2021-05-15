@@ -105,6 +105,10 @@ styleDef.heavy = {
   fontFamily: 'NotoSansJP_900Black',
 };
 
+styleDef.pressable = {
+  padding: SIZES.xs,
+};
+
 styleDef.headerText = {
   ...styleDef.bold,
   color: COLORS.light,
@@ -120,6 +124,13 @@ styleDef.h1 = {
 styleDef.h2 = {
   ...styleDef.text,
   fontSize: SIZES.xl,
+};
+
+styleDef.row = {
+  padding: SIZES.md,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
 };
 
 styleDef.button = {
